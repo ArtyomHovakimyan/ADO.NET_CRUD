@@ -13,14 +13,26 @@ namespace Mic.Volo.AdoNetEx
         static void Main(string[] args)
         {
             string connectoinString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            string sqlExpression = "Insert into Users(Name,Age) Values('Name1',21)";
+            string sqlExpression = "SELECT * FROM Users";
             using (SqlConnection connection = new SqlConnection(connectoinString))
             {
                 connection.Open();
                 Console.WriteLine("connected");
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
-                int number = command.ExecuteNonQuery();
-                Console.WriteLine("added objects: {0}", number);
+                SqlDataReader reader = command.ExecuteReader();
+                if(reader.HasRows)
+                {
+                    Console.WriteLine("{0}\t{1}\t{2}",reader.GetName(0),reader.GetName(1),reader.GetName(2));
+                    while (reader.Read())
+                    {
+                        object id = reader.GetValue(0);
+                        object name = reader.GetValue(1);
+                        object age = reader.GetValue(2);
+
+                        Console.WriteLine("{0} \t{1} \t{2}", id, name, age);
+                    }
+
+                }
 
             }
 
