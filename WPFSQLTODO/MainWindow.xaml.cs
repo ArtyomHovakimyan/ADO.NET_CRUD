@@ -33,14 +33,15 @@ namespace WPFSQLTODO
             int id = Convert.ToInt32(myid.Text);
             int status;
             string title = myttitle.Text;
-            if (mystatus.IsChecked == true) status = 1;
+            if (mystatus.IsChecked == true) { status = 1; }
+            else { status = 0; }
                 
             string comment = mycomm.Text;
             int mark = Convert.ToInt32(mymark.Text);
 
 
 
-            string sqlExpression = "Insert into TodoItem(id,title,status,comment,mark) values (id,'title',status,'comment',mark) ";
+            string sqlExpression = string.Format("Insert into TodoItem(id,title,status,comment,mark) Values('{0}','{1}','{2}','{3}',{4}')", id, title, status, comment, mark);
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
