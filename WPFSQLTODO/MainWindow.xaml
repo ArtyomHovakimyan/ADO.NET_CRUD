@@ -1,0 +1,25 @@
+﻿<Window x:Class="WPFSQLTODO.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFSQLTODO"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Label x:Name="myId" Content="ID" HorizontalAlignment="Left" Margin="184,40,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="myTitle" Content="Title" HorizontalAlignment="Left" Margin="260,32,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Status" Content="myStatus" HorizontalAlignment="Left" Margin="370,32,0,0" VerticalAlignment="Top" Width="134"/>
+        <Label x:Name="myComm" Content="Comment" HorizontalAlignment="Left" Margin="527,32,0,0" VerticalAlignment="Top" Width="112"/>
+        <Label x:Name="myMark" Content="Mark" HorizontalAlignment="Left" Margin="659,32,0,0" VerticalAlignment="Top" Width="99"/>
+        <TextBox x:Name="mymark" HorizontalAlignment="Left" Height="23" Margin="659,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="mycomm" HorizontalAlignment="Left" Height="23" Margin="527,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="myttitle" HorizontalAlignment="Left" Height="23" Margin="243,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="myid" HorizontalAlignment="Left" Height="23" Margin="118,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <RadioButton x:Name="mystatus" IsChecked="False" Content="Status" HorizontalAlignment="Left" Margin="391,71,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="mybtnsave" Content="Save" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top" Width="75" Click="mybtnsave_Click"/>
+        <TextBox x:Name="myouttxt" HorizontalAlignment="Left" Height="275" Margin="103,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="655"/>
+        <Button x:Name="mybtnshow" Content="Show" HorizontalAlignment="Left" Margin="10,105,0,0" VerticalAlignment="Top" Width="75" Click="mybtnshow_Click"/>
+
+    </Grid>
+</Window>
