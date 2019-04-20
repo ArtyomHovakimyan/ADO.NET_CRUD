@@ -24,42 +24,68 @@ namespace Mic.Volo.AdoNetEx
                 Console.WriteLine("connected");
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
                 int count = command.ExecuteNonQuery();
-                Console.WriteLine("Added {0} objects.",count);
+                Console.WriteLine("Added {0} objects.", count);
 
                 name = Console.ReadLine();
                 sqlExpression = string.Format("UPDATE Users SET Name='{0}' WHERE Agge={1}", name, age);
                 command.CommandText = sqlExpression;
                 count = command.ExecuteNonQuery();
-                Console.WriteLine("Update {0} objects:",count);
-                       
+                Console.WriteLine("Update {0} objects:", count);
+
             }
-            
+
 
             Console.WriteLine("Close connect...");
-           // ReadDataAsync().GetAwaiter();
+
         }
         private static async Task ReadDataAsync()
         {
-            string connectoinString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
             string sqlExpression = "SELECT * FROM Users";
-            using (SqlConnection connection=new SqlConnection(connectoinString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
                 SqlDataReader reader = await command.ExecuteReaderAsync();
-                if(reader.HasRows)
+
+                if (reader.HasRows)
                 {
-                    Console.WriteLine("{0}\t{1}\t{2}",reader.GetName(0),reader.GetName(1),reader.GetName(2));
+                    Console.WriteLine("{0}\t{1}\t{2}", reader.GetName(0), reader.GetName(1), reader.GetName(2));
+
                     while (await reader.ReadAsync())
                     {
                         object id = reader.GetValue(0);
                         object name = reader.GetValue(1);
                         object age = reader.GetValue(2);
-                        Console.WriteLine("{0}\t{1}\t{2}",id,name,age);
+                        Console.WriteLine("{0} \t{1} \t{2}", id, name, age);
                     }
-                    reader.Close();
                 }
+                reader.Close();
             }
         }
+        //private static async Task ReadDataAsync()
+        //{
+        //    string connectoinString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //    string sqlExpression = "SELECT * FROM Users";
+        //    using (SqlConnection connection=new SqlConnection(connectoinString))
+        //    {
+        //        await connection.OpenAsync();
+        //        SqlCommand command = new SqlCommand(sqlExpression, connection);
+        //        SqlDataReader reader = await command.ExecuteReaderAsync();
+        //        if(reader.HasRows)
+        //        {
+        //            Console.WriteLine("{0}\t{1}\t{2}",reader.GetName(0),reader.GetName(1),reader.GetName(2));
+        //            while (await reader.ReadAsync())
+        //            {
+        //                object id = reader.GetValue(0);
+        //                object name = reader.GetValue(1);
+        //                object age = reader.GetValue(2);
+        //                Console.WriteLine("{0}\t{1}\t{2}",id,name,age);
+        //            }
+        //            reader.Close();
+        //        }
+        //    }
+        //}
     }
 }
