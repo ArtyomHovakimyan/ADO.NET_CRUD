@@ -17,13 +17,42 @@ namespace Mic.Volo.AdoNetEx
             Console.Write("Enter user name:");
             string name = Console.ReadLine();
 
-            Console.Write("Enter user age:");
-            int age = Int32.Parse(Console.ReadLine());
-
-            AddUser(name, age);
-            Console.WriteLine();
-            GetUsers();
+            GetAgeRange(name);
             Console.Read();
+        }
+        private static void GetAgeRange(string name)
+        {
+            string sqlExpression = "sp_GetAgeRange";
+            using (SqlConnection connection=new SqlConnection(connectoinString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                SqlParameter nameParam = new SqlParameter
+                {
+                    ParameterName = "@name",
+                    Value = name
+                };
+                command.Parameters.Add(nameParam);
+                SqlParameter minAgeParam = new SqlParameter
+                {
+                    ParameterName = "@minAge",
+                    SqlDbType = System.Data.SqlDbType.Int
+                };
+                minAgeParam.Direction = System.Data.ParameterDirection.Output;
+                command.Parameters.Add(minAgeParam);
+                SqlParameter maxAgeParam = new SqlParameter
+                {
+                    ParameterName = "@maxAge",
+                    SqlDbType = System.Data.SqlDbType.Int
+                };
+                maxAgeParam.Direction = System.Data.ParameterDirection.Output;
+                command.Parameters.Add(maxAgeParam);
+                command.ExecuteNonQuery();
+
+                Console.WriteLine("Min age : {0}",command.Parameters["@minAge"].Value);
+                Console.WriteLine("Max age : {0}",command.Parameters["@maxAge"].Value);
+            }
         }
         private static void AddUser(string name,int age)
         {
