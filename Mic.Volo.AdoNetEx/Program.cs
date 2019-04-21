@@ -14,7 +14,36 @@ namespace Mic.Volo.AdoNetEx
 
         static void Main(string[] args)
         {
-            SaveFileToDatabase();
+            // SaveFileToDatabase();
+            ReadFileFromDatabase();
+        }
+        private static void ReadFileFromDatabase()
+        {
+            List<Image> images = new List<Image>();
+            using (SqlConnection connection=new SqlConnection(connectoinString))
+            {
+                connection.Open();
+                string sql = "SELECT * FROM Images";
+                SqlCommand command = new SqlCommand(sql, connection);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string filename = reader.GetString(1);
+                    string title = reader.GetString(2);
+                    byte[] data = (byte[])reader.GetValue(3);
+                    Image image = new Image(id, filename, title, data);
+                    images.Add(image);
+                }
+            }
+            if(images.Count>0)
+            {
+                using (System.IO.FileStream fs=new System.IO.FileStream(images[0].FileName,System.IO.FileMode.OpenOrCreate))
+                {
+                    fs.Write(images[0].Data, 0, images[0].Data.Length);
+                    Console.WriteLine("Picture '{0}' saved",images[0].Title);
+                }
+            }
         }
         private static void SaveFileToDatabase()
         {
