@@ -14,11 +14,28 @@ namespace Mic.Volo.AdoNetEx
 
         static void Main(string[] args)
         {
-            Console.Write("Enter user name:");
-            string name = Console.ReadLine();
+            using (SqlConnection connection=new SqlConnection(connectoinString))
+            {
+                connection.Open();
+                SqlTransaction transaction = connection.BeginTransaction();
 
-            GetAgeRange(name);
-            Console.Read();
+                SqlCommand command = connection.CreateCommand();
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = "INSERT INTO Users (Name,Age) VALUES ('Tim',34)";
+                    command.ExecuteNonQuery();
+                    command.CommandText = "INSERT INTO Users (Name,Age) VALUES ('Kat',31)";
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                    Console.WriteLine("Data added in database.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    transaction.Rollback();
+                }
+            }
         }
         private static void GetAgeRange(string name)
         {
