@@ -14,28 +14,17 @@ namespace Mic.Volo.AdoNetEx
         {
             string connectoinString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-            string sqlExpression = "SELECT * FROM Users";
+            string sqlExpression = "SELECT COUNT(*) FROM Users";
             using (SqlConnection connection = new SqlConnection(connectoinString))
             {
                 connection.Open();
                 Console.WriteLine("connected");
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
-                // int count = command.ExecuteNonQuery();
-                // Console.WriteLine("Added {0} objects.", count);
-                SqlDataReader reader = command.ExecuteReader();
-                if(reader.HasRows)
-                {
-                    Console.WriteLine("{0}\t{1}\t{2}",reader.GetName(0),reader.GetName(1),reader.GetName(2));
-                    while (reader.Read())
-                    {
-                        int id = reader.GetInt32(0);
-                        string name = reader.GetString(1);
-                        int age = reader.GetInt32(2);
-
-                        Console.WriteLine("{0}\t{1}\t{2}", id, name, age); ;
-                    }
-                }
-                reader.Close();
+                object count = command.ExecuteScalar();
+                command.CommandText = "SELECT MIN(Age) FROM Users";
+                object minAge = command.ExecuteScalar();
+                Console.WriteLine("Count is {0}",count);
+                Console.WriteLine("Min value is {0}",minAge);
             }
             
 
