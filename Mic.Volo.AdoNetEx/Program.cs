@@ -14,27 +14,34 @@ namespace Mic.Volo.AdoNetEx
 
         static void Main(string[] args)
         {
+            SaveFileToDatabase();
+        }
+        private static void SaveFileToDatabase()
+        {
             using (SqlConnection connection=new SqlConnection(connectoinString))
             {
                 connection.Open();
-                SqlTransaction transaction = connection.BeginTransaction();
+                SqlCommand command = new SqlCommand();
+                command.Connection = connection;
+                command.CommandText = @"INSERT INTO Images VALUES (@FileName,@Title,@ImageData)";
+                command.Parameters.Add("@FileName", System.Data.SqlDbType.NVarChar, 50);
+                command.Parameters.Add("@Title", System.Data.SqlDbType.NVarChar, 50);
+                command.Parameters.Add("@ImageData", System.Data.SqlDbType.Image, 1000000);
 
-                SqlCommand command = connection.CreateCommand();
-                command.Transaction = transaction;
-                try
+                string filename = @"E:\Tyom\Pictures\IMG_1113.JPG";
+                string title = "esem";
+                string shortFileName = filename.Substring(filename.LastIndexOf('\\') + 1);
+                byte[] imageData;
+                using (System.IO.FileStream fs=new System.IO.FileStream(filename,System.IO.FileMode.Open))
                 {
-                    command.CommandText = "INSERT INTO Users (Name,Age) VALUES ('Tim',34)";
-                    command.ExecuteNonQuery();
-                    command.CommandText = "INSERT INTO Users (Name,Age) VALUES ('Kat',31)";
-                    command.ExecuteNonQuery();
-                    transaction.Commit();
-                    Console.WriteLine("Data added in database.");
+                    imageData = new byte[fs.Length];
+                    fs.Read(imageData, 0, imageData.Length);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    transaction.Rollback();
-                }
+                command.Parameters["@FileName"].Value = shortFileName;
+                command.Parameters["@Title"].Value = title;
+                command.Parameters["@ImageData"].Value = imageData;
+
+                command.ExecuteNonQuery();
             }
         }
         private static void GetAgeRange(string name)
